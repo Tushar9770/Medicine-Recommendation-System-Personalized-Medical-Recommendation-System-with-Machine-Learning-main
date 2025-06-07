@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - AI Health Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="navbar-brand">
+                <img src="{{ url_for('static', filename='img.png') }}" alt="Logo" class="logo">
+                AI Health Assistant
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/hospitals" class="nav-link">Find Hospitals</a></li>
+                <li><a href="/about" class="nav-link">About</a></li>
+                <li><a href="/contact" class="nav-link">Contact</a></li>
+                <li><a href="/blog" class="nav-link">Blog</a></li>
+                <li><a href="/logout" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Welcome, {{ user.name }}!</h1>
+            <p>View your health diagnosis history and track your progress.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="profile-section card fade-in">
+            <h2 class="card-title">Your Information</h2>
+            <div class="profile-info">
+                <p><strong>Name:</strong> {{ user.name }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+        </div>
+
+        <div class="history-section card fade-in">
+            <h2 class="card-title">Diagnosis History</h2>
+            {% if user.history %}
+                <div class="history-list">
+                    {% for entry in user.history|reverse %}
+                    <div class="history-item">
+                        <div class="history-date">{{ entry.date }}</div>
+                        <div class="history-disease">{{ entry.disease }}</div>
+                        <div class="history-symptoms">
+                            Symptoms: {{ entry.symptoms|join(', ') }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-history">No diagnosis history yet.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar-menu');
+            const toggle = document.createElement('button');
+            toggle.className = 'navbar-toggle';
+            toggle.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            `;
+            
+            toggle.addEventListener('click', () => {
+                navbar.classList.toggle('active');
+            });
+            
+            document.querySelector('.navbar-container').appendChild(toggle);
+        });
+    </script>
+</body>
+</html> 

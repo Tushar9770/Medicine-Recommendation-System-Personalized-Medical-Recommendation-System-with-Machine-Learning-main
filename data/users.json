@@ -1,0 +1,182 @@
+{
+    "users": [
+        {
+            "name": "gigi",
+            "email": "gigi@gmail.com",
+            "password": "scrypt:32768:8:1$wtwiRPpUpw3MuKsh$af5910e3fa66e69cb0f7d2fb920e93ac01c97a564853d89766b02b6ff26ba844c029a0e322297f644946258f54730593541cbb6e09a17211ca3c284560489f18",
+            "history": [
+                {
+                    "symptoms": [
+                        "fatigue",
+                        "weight_loss",
+                        "lethargy",
+                        "irregular_sugar_level"
+                    ],
+                    "disease": "Diabetes ",
+                    "date": "2025-06-01 18:40:21"
+                },
+                {
+                    "symptoms": [
+                        "vomiting",
+                        "fatigue",
+                        "weight_loss",
+                        "cough"
+                    ],
+                    "disease": "Gastroenteritis",
+                    "date": "2025-06-01 18:54:12"
+                }
+            ]
+        },
+        {
+            "name": "new",
+            "email": "new@gmail.com",
+            "password": "scrypt:32768:8:1$x76Uz785YkSSynuc$1b5644653e53b24f684b170bdfc097205d7de7c952a3f19d1f5f0b7457cbde26b8e31bded44dd493f81a0c3e3b872da6403db16dfd5bb30b3ba4026b37b1831a",
+            "history": [
+                {
+                    "symptoms": [
+                        "muscle_wasting",
+                        "weight_gain"
+                    ],
+                    "disease": "AIDS",
+                    "date": "2025-06-01 18:56:11"
+                },
+                {
+                    "symptoms": [
+                        "fatigue",
+                        "weight_loss",
+                        "lethargy",
+                        "irregular_sugar_level"
+                    ],
+                    "disease": "Diabetes ",
+                    "date": "2025-06-01 19:31:30"
+                },
+                {
+                    "symptoms": [
+                        "fatigue",
+                        "weight_loss",
+                        "lethargy",
+                        "irregular_sugar_level"
+                    ],
+                    "disease": "Diabetes ",
+                    "date": "2025-06-01 19:31:43"
+                },
+                {
+                    "symptoms": [
+                        "skin_rash",
+                        "chills",
+                        "joint_pain",
+                        "vomiting"
+                    ],
+                    "disease": "Acne",
+                    "date": "2025-06-01 19:31:47"
+                },
+                {
+                    "symptoms": [
+                        "muscle_wasting",
+                        "weight_gain"
+                    ],
+                    "disease": "AIDS",
+                    "date": "2025-06-01 19:31:51"
+                },
+                {
+                    "symptoms": [
+                        "fatigue",
+                        "weight_loss",
+                        "lethargy",
+                        "irregular_sugar_level"
+                    ],
+                    "disease": "Diabetes ",
+                    "date": "2025-06-01 19:31:54"
+                },
+                {
+                    "symptoms": [
+                        "vomiting",
+                        "fatigue",
+                        "weight_loss",
+                        "cough"
+                    ],
+                    "disease": "Gastroenteritis",
+                    "date": "2025-06-01 21:01:04"
+                },
+                {
+                    "symptoms": [
+                        "muscle_wasting",
+                        "weight_gain"
+                    ],
+                    "disease": "AIDS",
+                    "date": "2025-06-02 02:26:04"
+                },
+                {
+                    "symptoms": [
+                        "congestion",
+                        "headache",
+                        "chills"
+                    ],
+                    "disease": "Allergy",
+                    "date": "2025-06-04 02:59:15"
+                },
+                {
+                    "symptoms": [
+                        "congestion",
+                        "headache",
+                        "chills"
+                    ],
+                    "disease": "Allergy",
+                    "date": "2025-06-04 14:29:40"
+                },
+                {
+                    "symptoms": [
+                        "congestion",
+                        "headache",
+                        "chills"
+                    ],
+                    "disease": "Allergy",
+                    "date": "2025-06-04 14:34:06"
+                },
+                {
+                    "symptoms": [
+                        "congestion",
+                        "headache",
+                        "chills"
+                    ],
+                    "disease": "Allergy",
+                    "date": "2025-06-04 14:34:38"
+                },
+                {
+                    "symptoms": [
+                        "chills",
+                        "high fever"
+                    ],
+                    "disease": "AIDS",
+                    "date": "2025-06-04 14:35:48"
+                },
+                {
+                    "symptoms": [
+                        "congestion",
+                        "headache",
+                        "chills"
+                    ],
+                    "disease": "Allergy",
+                    "date": "2025-06-04 14:36:01"
+                },
+                {
+                    "symptoms": [
+                        "chills",
+                        "high fever"
+                    ],
+                    "disease": "AIDS",
+                    "date": "2025-06-04 14:36:13"
+                },
+                {
+                    "symptoms": [
+                        "congestion",
+                        "headache",
+                        "chills"
+                    ],
+                    "disease": "Allergy",
+                    "date": "2025-06-04 14:50:41"
+                }
+            ]
+        }
+    ]
+}

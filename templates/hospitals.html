@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Nearby Hospitals - AI Health Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="navbar-brand">
+                <img src="{{ url_for('static', filename='img.png') }}" alt="Logo" class="logo">
+                AI Health Assistant
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/hospitals" class="nav-link active">Find Hospitals</a></li>
+                <li><a href="/about" class="nav-link">About</a></li>
+                <li><a href="/contact" class="nav-link">Contact</a></li>
+                <li><a href="/blog" class="nav-link">Blog</a></li>
+                {% if 'user_email' in session %}
+                    <li><a href="/profile" class="nav-link">Profile</a></li>
+                    <li><a href="/logout" class="nav-link">Logout</a></li>
+                {% else %}
+                    <li><a href="/login" class="nav-link">Login</a></li>
+                    <li><a href="/register" class="nav-link">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Find Nearby Hospitals</h1>
+            <p>Locate healthcare facilities in your area using real-time location data.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="card fade-in">
+            <div id="map"></div>
+            <div id="hospital-list" class="hospital-list"></div>
+        </div>
+    </main>
+
+    <script>
+        let map;
+        let service;
+        let infowindow;
+
+        function initMap() {
+            const defaultLocation = { lat: 20.5937, lng: 78.9629 }; // India's center
+            
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: defaultLocation,
+                zoom: 13,
+                styles: [
+                    {
+                        "featureType": "poi.medical",
+                        "elementType": "geometry",
+                        "stylers": [{"color": "#2563eb"}]
+                    }
+                ]
+            });
+
+            infowindow = new google.maps.InfoWindow();
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        map.setCenter(userLocation);
+                        
+                        // Add user location marker
+                        new google.maps.Marker({
+                            position: userLocation,
+                            map: map,
+                            title: "Your Location",
+                            icon: {
+                                path: google.maps.SymbolPath.CIRCLE,
+                                scale: 10,
+                                fillColor: "#2563eb",
+                                fillOpacity: 1,
+                                strokeColor: "#ffffff",
+                                strokeWeight: 2,
+                            }
+                        });
+                        
+                        searchNearbyHospitals(userLocation);
+                    },
+                    () => {
+                        searchNearbyHospitals(defaultLocation);
+                    }
+                );
+            } else {
+                searchNearbyHospitals(defaultLocation);
+            }
+        }
+
+        function searchNearbyHospitals(location) {
+            const request = {
+                location: location,
+                radius: '5000',
+                type: ['hospital']
+            };
+
+            service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    displayHospitals(results);
+                }
+            });
+        }
+
+        function displayHospitals(places) {
+            const hospitalList = document.getElementById('hospital-list');
+            hospitalList.innerHTML = '';
+
+            places.forEach(place => {
+                const marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location,
+                    title: place.name,
+                    animation: google.maps.Animation.DROP
+                });
+
+                marker.addListener('click', () => {
+                    const content = `
+                        <div class="info-window">
+                            <h3>${place.name}</h3>
+                            <p>${place.vicinity}</p>
+                            ${place.rating ? `<p>Rating: ${place.rating} ⭐</p>` : ''}
+                            ${place.opening_hours?.open_now ? 
+                                '<p class="open">Open Now</p>' : 
+                                '<p class="closed">Closed</p>'
+                            }
+                        </div>
+                    `;
+                    infowindow.setContent(content);
+                    infowindow.open(map, marker);
+                });
+
+                const hospitalDiv = document.createElement('div');
+                hospitalDiv.className = 'hospital-item fade-in';
+                hospitalDiv.innerHTML = `
+                    <div class="hospital-name">${place.name}</div>
+                    <div class="hospital-address">${place.vicinity}</div>
+                    ${place.rating ? `<div class="hospital-rating">Rating: ${place.rating} ⭐</div>` : ''}
+                    ${place.opening_hours?.open_now ? 
+                        '<div class="hospital-status open">Open Now</div>' : 
+                        '<div class="hospital-status closed">Closed</div>'
+                    }
+                `;
+                
+                hospitalDiv.addEventListener('click', () => {
+                    map.panTo(place.geometry.location);
+                    map.setZoom(15);
+                    infowindow.setContent(marker.getTitle());
+                    infowindow.open(map, marker);
+                    
+                    // Animate marker
+                    marker.setAnimation(google.maps.Animation.BOUNCE);
+                    setTimeout(() => marker.setAnimation(null), 750);
+                });
+                
+                hospitalList.appendChild(hospitalDiv);
+            });
+        }
+
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar-menu');
+            const toggle = document.createElement('button');
+            toggle.className = 'navbar-toggle';
+            toggle.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            `;
+            
+            toggle.addEventListener('click', () => {
+                navbar.classList.toggle('active');
+            });
+            
+            document.querySelector('.navbar-container').appendChild(toggle);
+        });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap" async defer></script>
+</body>
+</html> 

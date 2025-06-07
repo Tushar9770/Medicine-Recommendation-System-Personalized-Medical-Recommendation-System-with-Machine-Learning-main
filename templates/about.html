@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - AI Health Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="navbar-brand">
+                <img src="{{ url_for('static', filename='img.png') }}" alt="Logo" class="logo">
+                AI Health Assistant
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/hospitals" class="nav-link">Find Hospitals</a></li>
+                <li><a href="/about" class="nav-link active">About</a></li>
+                <li><a href="/contact" class="nav-link">Contact</a></li>
+                <li><a href="/blog" class="nav-link">Blog</a></li>
+                {% if 'user_email' in session %}
+                    <li><a href="/profile" class="nav-link">Profile</a></li>
+                    <li><a href="/logout" class="nav-link">Logout</a></li>
+                {% else %}
+                    <li><a href="/login" class="nav-link">Login</a></li>
+                    <li><a href="/register" class="nav-link">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>About Us</h1>
+            <p>Learn about our mission to revolutionize healthcare with AI technology.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Mission Section -->
+        <section class="card fade-in">
+            <h2 class="card-title">Our Mission</h2>
+            <p class="card-text">
+                At AI Health Assistant, we're dedicated to making healthcare more accessible and efficient through artificial intelligence. 
+                Our system combines advanced machine learning algorithms with medical expertise to provide accurate disease predictions 
+                and personalized health recommendations.
+            </p>
+        </section>
+
+        <!-- Features Section -->
+        <section class="card fade-in">
+            <h2 class="card-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>AI-Powered Diagnosis</h3>
+                    <p>Advanced machine learning algorithms for accurate symptom analysis and disease prediction.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Hospital Locator</h3>
+                    <p>Find nearby hospitals and healthcare facilities with our integrated Google Maps feature.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Personalized Recommendations</h3>
+                    <p>Get tailored medical advice, diet plans, and workout recommendations based on your condition.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Secure Health Tracking</h3>
+                    <p>Safely store and track your health history with our secure user authentication system.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="card fade-in">
+            <h2 class="card-title">Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <h3>Medical Experts</h3>
+                    <p>Our system is backed by experienced healthcare professionals who validate our AI predictions.</p>
+                </div>
+                <div class="team-member">
+                    <h3>AI Specialists</h3>
+                    <p>Expert data scientists and ML engineers ensure the accuracy of our prediction models.</p>
+                </div>
+                <div class="team-member">
+                    <h3>Development Team</h3>
+                    <p>Skilled developers working to provide you with the best possible user experience.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar-menu');
+            const toggle = document.createElement('button');
+            toggle.className = 'navbar-toggle';
+            toggle.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            `;
+            
+            toggle.addEventListener('click', () => {
+                navbar.classList.toggle('active');
+            });
+            
+            document.querySelector('.navbar-container').appendChild(toggle);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Health Care Assistant</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container navbar-container">
+        <a href="/" class="navbar-brand">
+          <img
+            src="{{ url_for('static', filename='img.png') }}"
+            alt="Logo"
+            class="logo"
+          />
+          AI Health Assistant
+        </a>
+        <ul class="navbar-menu">
+          <li><a href="/" class="nav-link active">Home</a></li>
+          <li><a href="/hospitals" class="nav-link">Find Hospitals</a></li>
+          <li><a href="/about" class="nav-link">About</a></li>
+          <li><a href="/contact" class="nav-link">Contact</a></li>
+          <li><a href="/blog" class="nav-link">Blog</a></li>
+          {% if 'user_email' in session %}
+              <li><a href="/profile" class="nav-link">Profile</a></li>
+              <li><a href="/logout" class="nav-link">Logout</a></li>
+          {% else %}
+              <li><a href="/login" class="nav-link">Login</a></li>
+              <li><a href="/register" class="nav-link">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <h1>AI-Powered Health Diagnosis</h1>
+        <p>
+          Get instant medical recommendations based on your symptoms using
+          advanced machine learning.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+      <!-- Diagnosis Form -->
+      <div class="card fade-in">
+        <h2 class="card-title">Describe Your Symptoms</h2>
+        <form action="/predict" method="post">
+          <div class="form-group">
+            <label for="symptoms" class="form-label"
+              >Enter your symptoms:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="symptoms"
+              name="symptoms"
+              placeholder="E.g., headache, fever, cough"
+            />
+            <div class="form-text">Separate multiple symptoms with commas</div>
+          </div>
+
+          <div class="form-group">
+            <button
+              type="button"
+              id="startSpeechRecognition"
+              class="btn btn-outline"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"
+                />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" y1="19" x2="12" y2="23" />
+                <line x1="8" y1="23" x2="16" y2="23" />
+              </svg>
+              Voice Input
+            </button>
+          </div>
+
+          <div id="transcription" class="form-text"></div>
+
+          {% if message %}
+          <div class="alert alert-warning">{{ message }}</div>
+          {% endif %}
+
+          <button type="submit" class="btn btn-primary">Get Diagnosis</button>
+        </form>
+      </div>
+
+      {% if predicted_disease %}
+      <!-- Results Section -->
+      <div class="results-container fade-in">
+        <div class="result-card">
+          <h3 class="card-title">Diagnosis</h3>
+          <p class="result-text">{{ predicted_disease }}</p>
+        </div>
+
+        <div class="result-card">
+          <h3 class="card-title">Description</h3>
+          <p class="result-text">{{ dis_des }}</p>
+        </div>
+
+        <div class="result-card">
+          <h3 class="card-title">Precautions</h3>
+          <ul class="result-list">
+            {% for item in my_precautions %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="result-card">
+          <h3 class="card-title">Recommended Medications</h3>
+          <ul class="result-list">
+            {% for item in medications %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="result-card">
+          <h3 class="card-title">Recommended Workouts</h3>
+          <ul class="result-list">
+            {% for item in workout %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="result-card">
+          <h3 class="card-title">Dietary Recommendations</h3>
+          <ul class="result-list">
+            {% for item in my_diet %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+    </main>
+
+    <script>
+      // Voice Recognition
+      const startSpeechRecognitionButton = document.getElementById(
+        "startSpeechRecognition"
+      );
+      const transcriptionDiv = document.getElementById("transcription");
+      const symptomsInput = document.getElementById("symptoms");
+
+      startSpeechRecognitionButton.addEventListener(
+        "click",
+        startSpeechRecognition
+      );
+
+      function startSpeechRecognition() {
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = "en-US";
+
+        recognition.onstart = function () {
+          startSpeechRecognitionButton.classList.add("btn-primary");
+          startSpeechRecognitionButton.classList.remove("btn-outline");
+          startSpeechRecognitionButton.textContent = "Listening...";
+        };
+
+        recognition.onresult = function (event) {
+          const transcript = event.results[0][0].transcript;
+          symptomsInput.value = transcript;
+          transcriptionDiv.textContent = "Voice input: " + transcript;
+        };
+
+        recognition.onend = function () {
+          startSpeechRecognitionButton.classList.remove("btn-primary");
+          startSpeechRecognitionButton.classList.add("btn-outline");
+          startSpeechRecognitionButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                    Voice Input
+                `;
+        };
+
+        recognition.start();
+      }
+
+      // Mobile Menu Toggle
+      document.addEventListener("DOMContentLoaded", function () {
+        const navbar = document.querySelector(".navbar-menu");
+        const toggle = document.createElement("button");
+        toggle.className = "navbar-toggle";
+        toggle.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            `;
+
+        toggle.addEventListener("click", () => {
+          navbar.classList.toggle("active");
+        });
+
+        document.querySelector(".navbar-container").appendChild(toggle);
+      });
+    </script>
+  </body>
+</html>
