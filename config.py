@@ -1,5 +1,5 @@
 # Google Maps API Configuration
-GOOGLE_MAPS_API_KEY = "AIzaSyCSXz4nKQedbp0SuxrwybAGc85z6yge5xY"
+GOOGLE_MAPS_API_KEY = "your api key here"
 
 # Database Configuration
 import os
